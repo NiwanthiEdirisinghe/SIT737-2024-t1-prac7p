@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-mongo-node-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-mongo-node-app
+  template:
+    metadata:
+      labels:
+        app: my-mongo-node-app
+    spec:
+      containers:
+        - name: my-mongo-node-app
+          image: niwanthiedi/my-mongo-node-app:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-password
+            - name: DB_NAME
+              value: "mydb"
